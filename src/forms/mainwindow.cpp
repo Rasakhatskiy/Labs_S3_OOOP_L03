@@ -57,9 +57,12 @@ void MainWindow::on_pushButton_Cut_clicked()
     QString app = "ffmpeg";
     QStringList arguments;
     QString path ="d:\\Temp\\temp_a.m4a";
-    arguments << "-ss" << ui->timeEdit_from->text()
-              << "-to" << ui->timeEdit_to->text()
-              << "-i"  << path
+    arguments << "-ss" << (ui->checkBox_FromStart->isChecked() ? "0" : ui->timeEdit_from->text());
+
+    if(!ui->checkBox_TillEnd->isChecked())
+        arguments << "-to" << ui->timeEdit_to->text();
+
+    arguments << "-i"  << path
               << "-c:a" <<  "libmp3lame" << "-q:a" << "8"
               << ui->lineEdit_outText->text();
 
@@ -81,4 +84,14 @@ void MainWindow::on_pushButton_browse_clicked()
                     tr("Save File"),
                     "d:\\",
                     tr("Music file (*.mp3)")));
+}
+
+void MainWindow::on_checkBox_FromStart_stateChanged(int arg1)
+{
+   ui->timeEdit_from->setEnabled(ui->checkBox_FromStart->checkState() != Qt::CheckState::Checked);
+}
+
+void MainWindow::on_checkBox_TillEnd_stateChanged(int arg1)
+{
+    ui->timeEdit_to->setEnabled(ui->checkBox_TillEnd->checkState() != Qt::CheckState::Checked);
 }
